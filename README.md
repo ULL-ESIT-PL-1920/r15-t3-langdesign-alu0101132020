@@ -26,19 +26,27 @@ Modifica la gramática corrigiendo los errores que veas, de manera que genere fr
               
 <declaration> ::= 'var' WORD ('=' <expr>)?
 
-<expr> ::= <term> (('==', '!=', '>', '>=', '<', '<=', '=') <term>)*
+
+<expr> :: <variable> ('=' <assgination>)? // Redefinimos expresion para que sea una variable a la que se le puede asignar valor.
+
+
+<variable> :: = WORD (. WORD | '[' <array> ']')* // En caso de que se puedan anidar corchetes
+<variable> :: = WORD (. WORD | '[' <expr> ']')* // Si no se pueden anidar corchetes este es el correcto.
+
+<assignation> ::= <term> (('==', '!=', '>', '>=', '<', '<=', '=') <term>)* // Asignación que se puede hacer a la variable.
 
 <term> ::= <sum> (('+', '-') <sum>)*
 
-<sum> ::= <fact> (('*', '/') <fact>)*
-
-<fact> ::= <value> | <word> <apply> | <parenthesis> | <array> // Added by: Casiano
+<sum> ::= <value> (('*', '/') <value>)*
 
 <apply> ::= '(' <expr> (',' <expr>)* ')'<apply> | '.'<word><apply> | empty
 
-<array> ::= '[' ']' | '[' <expr> (',' <expr> )*] // Added by Casiano
+<array> ::= '[' ']' | '[' <expr> (',' <expr> )*']' // Added by Casiano
 
 <parenthesis> ::= '(' <expr> ')'
+
+// Definimos value.
+<value> ::= (VALUE | WORD | <array> | <parenthesis>) (. WORD | '[' <expr> ']' | <apply>)*  // Added by: Casiano
 ```
 
 ## Tokens
